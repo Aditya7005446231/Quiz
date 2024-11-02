@@ -2,29 +2,33 @@ const quizData = [
     {
         question: 'How old is Florin?',
         options: ['10', '17', '26', '110'],
-        correct: 'c'
+        correct: 'option_3'
     },
     {
         question: 'What is the most used programming language in 2019?',
         options: ['Java', 'C', 'Python', 'JavaScript'],
-        correct: 'd'
+        correct: 'option_4'
     },
     {
         question: 'Who is the President of US?',
         options: ['Florin Pop', 'Donald Trump', 'Ivan Saldano', 'Mihai Andrei'],
-        correct: 'b'
+        correct: 'option_2'
     },
     {
         question: 'What does HTML stand for?',
         options: ['Hypertext Markup Language', 'Cascading Style Sheet', 'Jason Object Notation'],
-        correct: 'a'
+        correct: 'option_1'
     },
     {
         question: "What year was JavaScript launched?",
         options: ['1996', '1995', '1994', 'none of the above'],
-        correct: 'b'
+        correct: 'option_2'
     }
 ];
+
+let currentQuiz = 0;
+let score1 = 0;
+const totalQuestions = quizData.length;
 
 const quiz = document.getElementById('quiz');
 const questionEle = document.getElementById('question');
@@ -35,10 +39,6 @@ const option_4 = document.getElementById('option_4');
 const submitBtn = document.getElementById('submit');
 const nextBtn = document.getElementById('next');
 
-let currentQuiz = 0;
-let score = 0;
-let userAnswers = new Array(quizData.length).fill(null);
-
 const loadQuiz = () => {
     const currentQuizData = quizData[currentQuiz];
     questionEle.innerText = currentQuizData.question;
@@ -46,15 +46,17 @@ const loadQuiz = () => {
     option_2.innerText = currentQuizData.options[1];
     option_3.innerText = currentQuizData.options[2];
     option_4.innerText = currentQuizData.options[3];
+    clearSelection();
+};
 
-    // Clear previous selection
+const clearSelection = () => {
     const answerEls = document.querySelectorAll('input[name="option"]');
     answerEls.forEach(answerEl => answerEl.checked = false);
 };
 
 const getSelected = () => {
     const answerEls = document.querySelectorAll('input[name="option"]');
-    let selectedAnswer;
+    let selectedAnswer = null;
     answerEls.forEach(answerEl => {
         if (answerEl.checked) {
             selectedAnswer = answerEl.id;
@@ -63,38 +65,30 @@ const getSelected = () => {
     return selectedAnswer;
 };
 
-
 const nextQuiz = () => {
     const selectedAnswer = getSelected();
     if (selectedAnswer !== null) {
-        userAnswers[currentQuiz] = selectedAnswer;
+        if (selectedAnswer === quizData[currentQuiz].correct) {
+            score1++;
+        }
         currentQuiz++;
-        if (currentQuiz < quizData.length) {
+        if (currentQuiz < totalQuestions) {
             loadQuiz();
         } else {
-            alert('You have completed the quiz!');
+            displayResults();
         }
     } else {
         alert('Please select an answer before proceeding to the next question!');
     }
 };
 
-
-const submitQuiz = () => {
-    const allAnswered = userAnswers.every(answer => answer !== null);
-    if (allAnswered) {
-        // Optionally, you can check if the selected answers are correct
-        console.log('All questions have been answered.');
-        console.log(`User answers: ${userAnswers}`);
+const displayResults = () => {
+    if (score1 === totalQuestions) {
+        alert(`Congratulations aap mahan ho! Your score is ${score1}/${totalQuestions}`);
     } else {
-        alert('Please attempt all questions before submitting the quiz!');
+        alert(`Your score is ${score1}/${totalQuestions}`);
     }
 };
 
-nextBtn.addEventListener('click', nextQuiz);
-submitBtn.addEventListener('click', submitQuiz);
-
+// Initialize the quiz
 loadQuiz();
-
-
-// 
