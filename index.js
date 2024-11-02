@@ -90,5 +90,8 @@ const displayResults = () => {
     }
 };
 
+submitBtn.addEventListener('click', nextQuiz);
+nextBtn.addEventListener('click', nextQuiz);
+
 // Initialize the quiz
 loadQuiz();
